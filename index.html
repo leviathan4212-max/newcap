@@ -33,10 +33,8 @@
     overflow: hidden;
   }
   #app {
-    width: 100%;
-    height: 100%;
-    max-width: 860px;
-    max-height: 700px;
+    width: min(100%, 860px);
+    aspect-ratio: 4 / 3; /* 宽度:高度 = 4:3 */
     background: rgba(255, 250, 250, 0.55);
     backdrop-filter: blur(12px);
     border-radius: 28px;
@@ -121,22 +119,21 @@
   #right {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 24px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 16px;
     background: rgba(255, 250, 250, 0.35);
     border-radius: 22px;
     padding: 20px;
     border: 1px solid rgba(255,255,255,0.4);
   }
   .entry-icon {
-    width: 140px;
-    height: 44px;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #fff;
@@ -246,7 +243,6 @@
     50% { filter: brightness(1.25); }
     100% { filter: brightness(1); }
   }
-  .stage-0 { border-color: #f2efed; }
   .stage-1 { border-color: #f2efed; }
   .stage-2 { border-color: #79a66b; animation: borderFlow 2.8s ease-in-out infinite; }
   .stage-3 { border-color: #e6b422; animation: borderFlow 2.2s ease-in-out infinite; }
@@ -509,7 +505,6 @@
 </div>
 <script>
 (function() {
-  // 从全局读取 MVU 数据
   function getMvuData() {
     if (window.SillyTavern && window.SillyTavern.getContext && window.SillyTavern.getContext().chat) {
       const context = window.SillyTavern.getContext();
@@ -517,7 +512,6 @@
       if (extension && extension.variables) return extension.variables;
       if (context.chat?.variables) return context.chat.variables;
     }
-    // 尝试从全局变量读取
     if (window.MVU && window.MVU.variables) return window.MVU.variables;
     if (window.mvu && window.mvu.getVariables) return window.mvu.getVariables();
     if (window.stat_data) return window.stat_data;
@@ -525,9 +519,8 @@
   }
 
   let mvuData = {};
-  let avatarCache = new Map(); // 角色名/地点名 -> base64 or url
+  let avatarCache = new Map();
 
-  // 头像缓存，使用 localStorage 方便演示，实际可换 IndexedDB
   function loadAvatarCache() {
     try {
       const cached = JSON.parse(localStorage.getItem('avatarCache') || '{}');
@@ -540,9 +533,7 @@
       localStorage.setItem('avatarCache', JSON.stringify(obj));
     } catch(e) {}
   }
-  function getAvatar(name) {
-    return avatarCache.get(name) || '';
-  }
+  function getAvatar(name) { return avatarCache.get(name) || ''; }
   function setAvatar(name, dataUrl) {
     avatarCache.set(name, dataUrl);
     saveAvatarCache();
@@ -569,7 +560,6 @@
     return 'stage-5';
   }
 
-  // 渲染世界状态栏
   function renderWorldbar() {
     const world = mvuData.世界 || {};
     const parts = [];
@@ -580,7 +570,6 @@
     if (world.当前事件) parts.push(`<span class="world-item"><span class="world-label">事件</span>${escapeHtml(world.当前事件)}</span>`);
     const track = document.getElementById('worldbarTrack');
     track.innerHTML = parts.join('') + parts.join('');
-    // 如果内容不溢出就不滚动
     const bar = document.getElementById('worldbar');
     track.style.animation = 'none';
     requestAnimationFrame(() => {
@@ -592,7 +581,6 @@
     });
   }
 
-  // 渲染主角信息
   function renderPlayer() {
     const p = mvuData.主角信息 || {};
     document.getElementById('player-scene').textContent = p.当前场景 || '未知';
@@ -602,7 +590,6 @@
     document.getElementById('player-action').textContent = p.当前行为 || '-';
   }
 
-  // 渲染角色列表
   function renderCharList() {
     const container = document.getElementById('char-list');
     container.innerHTML = '';
@@ -629,7 +616,6 @@
     });
   }
 
-  // 打开角色详情
   function openCharDetail(name) {
     const chars = mvuData.角色 || {};
     const c = chars[name];
@@ -676,7 +662,6 @@
         <div class="tab-content scroll-area" id="char-tab-content"></div>
       </div>
     `;
-    // 绑定 tab
     container.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -749,7 +734,6 @@
     }
   }
 
-  // 渲染地点列表
   function renderLocList() {
     const container = document.getElementById('loc-list');
     container.innerHTML = '';
@@ -809,7 +793,6 @@
     document.getElementById('mask-loc-detail').classList.add('show');
   }
 
-  // 渲染背包
   function renderBackpack() {
     const container = document.getElementById('backpack-list');
     container.innerHTML = '';
@@ -828,7 +811,6 @@
     });
   }
 
-  // 更新全部UI
   function updateUI() {
     mvuData = getMvuData();
     renderWorldbar();
@@ -838,7 +820,6 @@
     renderBackpack();
   }
 
-  // 绑定事件
   function bindEvents() {
     document.getElementById('entry-characters').addEventListener('click', () => {
       document.getElementById('mask-char-list').classList.add('show');
@@ -854,7 +835,6 @@
         document.getElementById(btn.dataset.close).classList.remove('show');
       });
     });
-    // 点击遮罩关闭
     document.querySelectorAll('.mask').forEach(mask => {
       mask.addEventListener('click', (e) => {
         if (e.target === mask) mask.classList.remove('show');
@@ -862,7 +842,6 @@
     });
   }
 
-  // 监听数据变化
   function observeData() {
     setInterval(() => {
       const newData = getMvuData();
@@ -873,13 +852,11 @@
     }, 1500);
   }
 
-  // 初始化
   loadAvatarCache();
   bindEvents();
   updateUI();
   observeData();
 
-  // 暴露手动刷新
   window.mvuPanelRefresh = updateUI;
 })();
 </script>
