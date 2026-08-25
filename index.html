@@ -13,7 +13,6 @@
     --line: #d8c4c8;
     --accent: #d46b7e;
     --shadow: 0 8px 24px rgba(90, 50, 60, 0.12);
-    --radius: 18px;
     --yellow: #e6b422;
     --green: #79a66b;
     --purple: #9b6b9b;
@@ -22,175 +21,110 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--bg);
+    background: transparent;
     color: var(--ink);
-    font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    overflow: hidden;
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    margin: 0;
+    padding: 8px;
   }
   #app {
-    width: min(100%, 860px);
-    aspect-ratio: 16 / 10; /* 高度适当降低 */
-    max-height: calc(100vh - 24px);
-    background: rgba(255, 250, 250, 0.55);
-    backdrop-filter: blur(12px);
-    border-radius: 28px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 250, 250, 0.9);
+    border-radius: 18px;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
   }
-  /* 刷新按钮 */
-  #refresh-btn {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    z-index: 20;
-    background: rgba(40, 30, 36, 0.75);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    transition: background 0.2s;
-  }
-  #refresh-btn:hover {
-    background: rgba(40, 30, 36, 0.95);
-  }
-  /* 顶部世界状态栏 */
+  /* 世界状态栏 */
   #worldbar {
-    padding: 8px 14px;
-    padding-right: 50px; /* 给刷新按钮留空 */
+    padding: 8px 12px;
     background: rgba(40, 30, 36, 0.85);
     color: #f5eef0;
-    border-radius: 14px;
-    margin: 10px 12px 6px 12px;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.3px;
     overflow: hidden;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   #worldbar .track {
     display: inline-block;
     white-space: nowrap;
-    animation: marquee 22s linear infinite;
+    animation: marquee 20s linear infinite;
   }
   @keyframes marquee {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-  .world-item { margin-right: 22px; display: inline; }
+  .world-item { margin-right: 18px; display: inline; }
   .world-label { opacity: 0.7; margin-right: 4px; }
-  /* 主区域 */
+  /* 主内容 */
   #main {
-    flex: 1;
-    display: flex;
-    min-height: 0;
-    padding: 2px 12px 12px 12px;
-  }
-  /* 左侧主角信息 */
-  #left {
-    width: 200px;
-    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-right: 12px;
+    padding: 10px;
+    gap: 10px;
   }
-  .info-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 2px;
-    letter-spacing: 0.5px;
-  }
-  .info-value {
-    font-size: 13px;
-    color: var(--ink);
-    line-height: 1.4;
-  }
-  .info-block {
+  /* 主角信息 */
+  .player-card {
     background: var(--card);
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     box-shadow: 0 2px 6px rgba(80, 50, 60, 0.06);
   }
-  #backpack-btn {
-    margin-top: 8px; /* 固定间距，不需要auto */
-    background: rgba(250, 235, 235, 0.9);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    cursor: pointer;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(80, 50, 60, 0.08);
-    transition: background 0.2s;
-  }
-  #backpack-btn:hover { background: #f7e3e5; }
-  /* 右侧入口区 */
-  #right {
-    flex: 1;
+  .player-row {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: stretch;
-    gap: 16px;
-    background: rgba(255, 250, 250, 0.35);
-    border-radius: 22px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.4);
-    min-height: 0;
-    overflow: hidden; /* 防止 transform 越界 */
+    gap: 10px;
+    padding: 3px 0;
+    font-size: 12px;
+  }
+  .player-row .label { color: var(--muted); flex-shrink: 0; }
+  .player-row .value { text-align: right; }
+  /* 入口按钮行 */
+  #entries {
+    display: flex;
+    gap: 12px;
+    padding: 4px 0;
   }
   .entry-icon {
-    flex: 1;               /* 自动填满宽度，不会越界 */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    padding: 14px 0;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 1px;
     color: #fff;
     cursor: pointer;
     border-radius: 12px;
-    transform: skewX(-12deg);
-    box-shadow: 0 6px 14px rgba(50, 30, 40, 0.18);
+    box-shadow: 0 4px 12px rgba(50, 30, 40, 0.18);
     transition: all 0.2s;
-    border: 2px solid rgba(255,255,255,0.6);
-  }
-  .entry-icon span {
-    transform: skewX(12deg);
+    border: 2px solid rgba(255,255,255,0.5);
+    text-align: center;
   }
   .entry-icon:hover {
     filter: brightness(1.08);
-    box-shadow: 0 8px 18px rgba(50, 30, 40, 0.24);
-    transform: skewX(-12deg) scale(1.02);
+    box-shadow: 0 6px 16px rgba(50, 30, 40, 0.24);
   }
   #entry-characters { background: linear-gradient(135deg, #c77b8f, #9f5870); }
   #entry-locations { background: linear-gradient(135deg, #84a6b5, #5d8290); }
+  #entry-backpack { background: linear-gradient(135deg, #b8a07e, #8f7758); font-size: 14px; }
   /* 弹窗遮罩 */
   .mask {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(45, 28, 36, 0.45);
+    background: rgba(45, 28, 36, 0.5);
     backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    z-index: 100;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
@@ -199,24 +133,24 @@
   /* 通用弹窗 */
   .modal {
     background: var(--card-solid);
-    border-radius: 24px;
+    border-radius: 20px;
     box-shadow: 0 20px 50px rgba(40, 20, 30, 0.3);
-    width: 90%;
-    max-width: 560px;
-    max-height: 82%;
+    width: 92%;
+    max-width: 520px;
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.7);
   }
   .modal-head {
-    padding: 16px 20px;
-    font-size: 17px;
+    padding: 12px 16px;
+    font-size: 15px;
     font-weight: 700;
     border-bottom: 1px solid var(--line);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
   }
   .close-btn {
     cursor: pointer;
@@ -226,12 +160,12 @@
     border: none;
   }
   .close-btn:hover { color: var(--accent); }
-  /* 角色列表 */
+  /* 列表 */
   .grid-list {
-    padding: 16px;
+    padding: 12px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
     overflow-y: auto;
   }
   .char-card {
@@ -239,18 +173,17 @@
     align-items: center;
     gap: 8px;
     padding: 10px;
-    border-radius: 14px;
+    border-radius: 12px;
     background: #faf1f0;
     border: 2px solid var(--white-border);
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(80, 50, 60, 0.08);
-    position: relative;
+    box-shadow: 0 2px 6px rgba(80, 50, 60, 0.08);
   }
   .char-card:hover { transform: translateY(-2px); }
   .char-avatar {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     background: #dcc7cb;
     flex-shrink: 0;
@@ -259,15 +192,15 @@
     justify-content: center;
     color: #fff;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 16px;
     overflow: hidden;
   }
   .char-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .char-name { font-weight: 600; font-size: 14px; }
+  .char-name { font-weight: 600; font-size: 13px; }
   /* 流光边框 */
   @keyframes borderFlow {
     0% { filter: brightness(1); }
-    50% { filter: brightness(1.25); }
+    50% { filter: brightness(1.3); }
     100% { filter: brightness(1); }
   }
   .stage-1 { border-color: #f2efed; }
@@ -278,47 +211,46 @@
   /* 角色详情 */
   .char-detail {
     display: flex;
-    padding: 20px;
-    gap: 18px;
-    overflow: hidden;
-    flex: 1;
+    padding: 14px;
+    gap: 14px;
+    overflow-y: auto;
   }
   .detail-left {
-    width: 160px;
+    width: 130px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   .detail-avatar {
-    width: 130px;
-    height: 130px;
-    border-radius: 18px;
+    width: 110px;
+    height: 110px;
+    border-radius: 16px;
     background: #dcc7cb;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 36px;
     color: #fff;
     font-weight: 700;
     box-shadow: var(--shadow);
   }
   .detail-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .basic-info {
-    margin-top: 10px;
+    margin-top: 8px;
     width: 100%;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     text-align: center;
   }
   .basic-info .name {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--ink);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
-  .basic-info .bio-line { margin-bottom: 3px; }
+  .basic-info .bio-line { margin-bottom: 2px; }
   .detail-right {
     flex: 1;
     display: flex;
@@ -328,29 +260,29 @@
   .value-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 12px;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
   }
-  .value-row .label { width: 45px; color: var(--muted); }
+  .value-row .label { width: 38px; color: var(--muted); flex-shrink: 0; }
   .value-bar {
     flex: 1;
-    height: 8px;
-    border-radius: 4px;
+    height: 7px;
+    border-radius: 3px;
     background: #efe1e4;
     overflow: hidden;
   }
-  .value-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
-  .value-num { width: 30px; text-align: right; font-weight: 600; }
+  .value-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .value-num { width: 28px; text-align: right; font-weight: 600; font-size: 11px; }
   .fill-favor { background: linear-gradient(90deg, #f2a2b8, #e86d8a); }
   .fill-arousal { background: linear-gradient(90deg, #a6c8d9, #6da0bd); }
   .fill-degrad { background: linear-gradient(90deg, #c99fc9, #8f5f8f); }
-  .tabs { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
   .tab {
-    padding: 5px 10px;
+    padding: 4px 9px;
     background: #f3e2e4;
-    border-radius: 8px;
-    font-size: 12px;
+    border-radius: 7px;
+    font-size: 11px;
     cursor: pointer;
     color: var(--muted);
   }
@@ -358,124 +290,110 @@
   .tab-content {
     flex: 1;
     overflow-y: auto;
-    margin-top: 8px;
+    margin-top: 6px;
     background: rgba(255,255,255,0.4);
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 12px;
-    line-height: 1.6;
-    min-height: 0;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.55;
+    min-height: 60px;
   }
-  .detail-block { margin-bottom: 10px; }
-  .detail-block h4 { font-size: 12px; color: var(--accent); margin-bottom: 4px; }
-  .record-row { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+  .detail-block { margin-bottom: 8px; }
+  .detail-block h4 {
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 3px;
+  }
+  .record-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 1px 0;
+  }
   .record-row .k { color: var(--muted); }
   .record-row .v { text-align: right; }
   /* 地点详情草稿纸 */
   .draft-paper {
-    margin: 16px;
-    padding: 20px 18px;
+    margin: 12px;
+    padding: 16px 14px;
     background: #faf5e8;
-    border-radius: 10px;
-    box-shadow: 0 10px 24px rgba(70, 50, 30, 0.15);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(70, 50, 30, 0.12);
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
-      transparent 25px,
-      #b3a68d 25px,
-      #b3a68d 26px
+      transparent 24px,
+      #b3a68d 24px,
+      #b3a68d 25px
     );
-    line-height: 26px;
-    flex: 1;
+    line-height: 25px;
     overflow-y: auto;
     color: #4a4038;
-    font-size: 13px;
+    font-size: 12px;
+    flex: 1;
   }
-  .draft-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .draft-status { color: #7a6a58; margin-bottom: 8px; }
-  .draft-desc { white-space: pre-wrap; margin-bottom: 14px; }
-  .draft-characters { display: flex; flex-wrap: wrap; gap: 10px; }
+  .draft-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .draft-status { color: #7a6a58; margin-bottom: 6px; }
+  .draft-desc { white-space: pre-wrap; margin-bottom: 10px; }
+  .draft-characters { display: flex; flex-wrap: wrap; gap: 8px; }
   .mini-char {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: rgba(255,255,255,0.7);
-    padding: 4px 8px;
-    border-radius: 8px;
+    padding: 3px 7px;
+    border-radius: 7px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
   }
   .mini-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
     background: #dcc7cb;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
   }
   .mini-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  /* 背包弹窗 */
-  .item-list { padding: 16px; overflow-y: auto; }
+  /* 背包 */
+  .item-list { padding: 12px; overflow-y: auto; }
   .item-row {
     background: #faf1f0;
     border-radius: 10px;
-    padding: 8px 12px;
-    margin-bottom: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
     cursor: pointer;
   }
-  .item-name { font-weight: 600; font-size: 13px; }
-  .item-desc { font-size: 12px; color: var(--muted); }
-  .hidden { display: none; }
+  .item-name { font-weight: 600; font-size: 12px; }
+  .item-desc { font-size: 11px; color: var(--muted); }
   .scroll-area { scrollbar-width: thin; scrollbar-color: #d8c4c8 transparent; }
-  .scroll-area::-webkit-scrollbar { width: 6px; }
+  .scroll-area::-webkit-scrollbar { width: 5px; }
   .scroll-area::-webkit-scrollbar-thumb { background: #d8c4c8; border-radius: 3px; }
 </style>
 </head>
 <body>
 <div id="app">
-  <!-- 刷新按钮 -->
-  <div id="refresh-btn" title="刷新数据">&#x21bb;</div>
-
   <!-- 世界状态栏 -->
   <div id="worldbar">
     <div class="track" id="worldbarTrack"></div>
   </div>
-  <!-- 主区域 -->
+
   <div id="main">
-    <!-- 左侧主角信息 -->
-    <div id="left">
-      <div class="info-block">
-        <div class="info-label">当前场景</div>
-        <div class="info-value" id="player-scene">加载中…</div>
-      </div>
-      <div class="info-block">
-        <div class="info-label">资金</div>
-        <div class="info-value" id="player-money">0</div>
-      </div>
-      <div class="info-block">
-        <div class="info-label">当前穿着</div>
-        <div class="info-value" id="player-clothes">-</div>
-      </div>
-      <div class="info-block">
-        <div class="info-label">当前状态</div>
-        <div class="info-value" id="player-state">-</div>
-      </div>
-      <div class="info-block">
-        <div class="info-label">当前行为</div>
-        <div class="info-value" id="player-action">-</div>
-      </div>
-      <div id="backpack-btn">🎒 背包</div>
-    </div>
-    <!-- 右侧入口 -->
-    <div id="right">
-      <div class="entry-icon" id="entry-characters"><span>角色</span></div>
-      <div class="entry-icon" id="entry-locations"><span>地点</span></div>
+    <!-- 主角信息 -->
+    <div class="player-card" id="playerCard"></div>
+
+    <!-- 入口按钮 -->
+    <div id="entries">
+      <div class="entry-icon" id="entry-characters">角色</div>
+      <div class="entry-icon" id="entry-locations">地点</div>
+      <div class="entry-icon" id="entry-backpack">背包</div>
     </div>
   </div>
+
   <!-- 角色列表弹窗 -->
   <div class="mask" id="mask-char-list">
     <div class="modal">
@@ -483,13 +401,15 @@
       <div class="grid-list scroll-area" id="char-list"></div>
     </div>
   </div>
+
   <!-- 角色详情弹窗 -->
   <div class="mask" id="mask-char-detail">
-    <div class="modal" style="max-width: 640px;">
+    <div class="modal" style="max-width:560px;">
       <div class="modal-head">角色详情 <button class="close-btn" data-close="mask-char-detail">✕</button></div>
       <div class="char-detail scroll-area" id="char-detail-content"></div>
     </div>
   </div>
+
   <!-- 地点列表弹窗 -->
   <div class="mask" id="mask-loc-list">
     <div class="modal">
@@ -497,56 +417,48 @@
       <div class="grid-list scroll-area" id="loc-list"></div>
     </div>
   </div>
+
   <!-- 地点详情弹窗 -->
   <div class="mask" id="mask-loc-detail">
-    <div class="modal" style="max-width: 560px;">
+    <div class="modal" style="max-width:500px;">
       <div class="modal-head">地点详情 <button class="close-btn" data-close="mask-loc-detail">✕</button></div>
       <div class="draft-paper scroll-area" id="loc-detail-content"></div>
     </div>
   </div>
+
   <!-- 背包弹窗 -->
   <div class="mask" id="mask-backpack">
-    <div class="modal" style="max-width: 420px;">
+    <div class="modal" style="max-width:400px;">
       <div class="modal-head">持有物品 <button class="close-btn" data-close="mask-backpack">✕</button></div>
       <div class="item-list scroll-area" id="backpack-list"></div>
     </div>
   </div>
 </div>
+
 <script>
 (function() {
-  function getMvuData() {
-    if (window.SillyTavern && window.SillyTavern.getContext && window.SillyTavern.getContext().chat) {
-      const context = window.SillyTavern.getContext();
-      const extension = context.extensionSettings?.mvu || context.extensionSettings?.variables || context.chatVariables;
-      if (extension && extension.variables) return extension.variables;
-      if (context.chat?.variables) return context.chat.variables;
+  // 获取 MVU 变量
+  function getVariables() {
+    try {
+      const all = getAllVariables();
+      // 兼容 stat_data 包装
+      if (all && all.stat_data) return all.stat_data;
+      return all || {};
+    } catch(e) {
+      return {};
     }
-    if (window.MVU && window.MVU.variables) return window.MVU.variables;
-    if (window.mvu && window.mvu.getVariables) return window.mvu.getVariables();
-    if (window.stat_data) return window.stat_data;
-    return {};
   }
 
-  let mvuData = {};
-  let avatarCache = new Map();
+  function getVar(path, def) {
+    try {
+      const val = _.get(getVariables(), path, def);
+      return val === undefined || val === null ? def : val;
+    } catch(e) {
+      return def;
+    }
+  }
 
-  function loadAvatarCache() {
-    try {
-      const cached = JSON.parse(localStorage.getItem('avatarCache') || '{}');
-      avatarCache = new Map(Object.entries(cached));
-    } catch(e) { avatarCache = new Map(); }
-  }
-  function saveAvatarCache() {
-    try {
-      const obj = Object.fromEntries(avatarCache);
-      localStorage.setItem('avatarCache', JSON.stringify(obj));
-    } catch(e) {}
-  }
-  function getAvatar(name) { return avatarCache.get(name) || ''; }
-  function setAvatar(name, dataUrl) {
-    avatarCache.set(name, dataUrl);
-    saveAvatarCache();
-  }
+  let currentData = {};
 
   function escapeHtml(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -561,63 +473,71 @@
   }
 
   function stageClass(deg) {
-    const s = getStage(deg);
-    if (s === 1) return 'stage-1';
-    if (s === 2) return 'stage-2';
-    if (s === 3) return 'stage-3';
-    if (s === 4) return 'stage-4';
-    return 'stage-5';
+    return 'stage-' + getStage(deg);
   }
 
+  // 渲染世界状态栏
   function renderWorldbar() {
-    const world = mvuData.世界 || {};
+    const month = getVar('世界.月', 4);
+    const day = getVar('世界.日', 4);
+    const weekday = getVar('世界.周几', '周一');
+    const hour = getVar('世界.时', 8);
+    const minute = getVar('世界.分', 0);
+    const weather = getVar('世界.天气', '晴朗');
+    const event = getVar('世界.当前事件', '');
+
     const parts = [];
-    parts.push(`<span class="world-item"><span class="world-label">日期</span>${escapeHtml(world.月)}月${escapeHtml(world.日)}日</span>`);
-    parts.push(`<span class="world-item"><span class="world-label">星期</span>${escapeHtml(world.周几)}</span>`);
-    parts.push(`<span class="world-item"><span class="world-label">时间</span>${escapeHtml(world.时)}:${String(world.分 ?? 0).padStart(2,'0')}</span>`);
-    parts.push(`<span class="world-item"><span class="world-label">天气</span>${escapeHtml(world.天气)}</span>`);
-    if (world.当前事件) parts.push(`<span class="world-item"><span class="world-label">事件</span>${escapeHtml(world.当前事件)}</span>`);
+    parts.push(`<span class="world-item"><span class="world-label">日期</span>${escapeHtml(month)}月${escapeHtml(day)}日 ${escapeHtml(weekday)}</span>`);
+    parts.push(`<span class="world-item"><span class="world-label">时间</span>${escapeHtml(hour)}:${String(minute).padStart(2,'0')}</span>`);
+    parts.push(`<span class="world-item"><span class="world-label">天气</span>${escapeHtml(weather)}</span>`);
+    if (event) parts.push(`<span class="world-item"><span class="world-label">事件</span>${escapeHtml(event)}</span>`);
+
     const track = document.getElementById('worldbarTrack');
     track.innerHTML = parts.join('') + parts.join('');
-    const bar = document.getElementById('worldbar');
     track.style.animation = 'none';
     requestAnimationFrame(() => {
+      const bar = document.getElementById('worldbar');
       if (track.scrollWidth > bar.clientWidth) {
-        track.style.animation = 'marquee ' + Math.max(10, track.scrollWidth / 60) + 's linear infinite';
-      } else {
-        track.style.animation = 'none';
+        track.style.animation = 'marquee ' + Math.max(10, track.scrollWidth / 50) + 's linear infinite';
       }
     });
   }
 
+  // 渲染主角信息
   function renderPlayer() {
-    const p = mvuData.主角信息 || {};
-    document.getElementById('player-scene').textContent = p.当前场景 || '未知';
-    document.getElementById('player-money').textContent = Number(p.资金 ?? 0).toLocaleString();
-    document.getElementById('player-clothes').textContent = p.当前穿着 || '-';
-    document.getElementById('player-state').textContent = p.当前状态 || '-';
-    document.getElementById('player-action').textContent = p.当前行为 || '-';
+    const scene = getVar('主角信息.当前场景', '未知');
+    const money = getVar('主角信息.资金', 0);
+    const clothes = getVar('主角信息.当前穿着', '-');
+    const state = getVar('主角信息.当前状态', '-');
+    const action = getVar('主角信息.当前行为', '-');
+
+    document.getElementById('playerCard').innerHTML = `
+      <div class="player-row"><span class="label">场景</span><span class="value">${escapeHtml(scene)}</span></div>
+      <div class="player-row"><span class="label">资金</span><span class="value">${Number(money).toLocaleString()}</span></div>
+      <div class="player-row"><span class="label">穿着</span><span class="value">${escapeHtml(clothes)}</span></div>
+      <div class="player-row"><span class="label">状态</span><span class="value">${escapeHtml(state)}</span></div>
+      <div class="player-row"><span class="label">行为</span><span class="value">${escapeHtml(action)}</span></div>
+    `;
   }
 
+  // 渲染角色列表
   function renderCharList() {
     const container = document.getElementById('char-list');
-    container.innerHTML = '';
-    const chars = mvuData.角色 || {};
+    const chars = getVar('角色', {});
     const keys = Object.keys(chars);
     if (!keys.length) {
       container.innerHTML = '<div style="padding:20px;text-align:center;color:#8a7a80;">暂无角色数据</div>';
       return;
     }
+    container.innerHTML = '';
     keys.forEach(name => {
       const c = chars[name];
       const normal = c.普通 || {};
       const deg = Number(normal.堕落值 ?? 0);
       const card = document.createElement('div');
       card.className = 'char-card ' + stageClass(deg);
-      const avatar = getAvatar(name);
-      const initials = escapeHtml((normal.姓名 || name).slice(0,1));
       card.innerHTML = `
-        <div class="char-avatar">${avatar ? '<img src="'+avatar+'" alt="">' : initials}</div>
+        <div class="char-avatar">${escapeHtml((normal.姓名 || name).slice(0,1))}</div>
         <div class="char-name">${escapeHtml(normal.姓名 || name)}</div>
       `;
       card.addEventListener('click', () => openCharDetail(name));
@@ -625,20 +545,21 @@
     });
   }
 
+  // 打开角色详情
   function openCharDetail(name) {
-    const chars = mvuData.角色 || {};
+    const chars = getVar('角色', {});
     const c = chars[name];
     if (!c) return;
     const normal = c.普通 || {};
     const nsfw = c.NSFW || {};
     const container = document.getElementById('char-detail-content');
-    const avatar = getAvatar(name);
     const deg = Number(normal.堕落值 ?? 0);
     const favor = Number(normal.好感度 ?? 0);
     const arousal = Number(normal.发情值 ?? 0);
+
     container.innerHTML = `
       <div class="detail-left">
-        <div class="detail-avatar">${avatar ? '<img src="'+avatar+'" alt="">' : escapeHtml((normal.姓名||name).slice(0,1))}</div>
+        <div class="detail-avatar">${escapeHtml((normal.姓名||name).slice(0,1))}</div>
         <div class="basic-info">
           <div class="name">${escapeHtml(normal.姓名 || name)}</div>
           <div class="bio-line">${escapeHtml(normal.年龄 ?? '')}岁 · ${escapeHtml(normal.身份 || '')}</div>
@@ -695,7 +616,7 @@
       `;
     } else if (tab === 'profile') {
       const body = normal.身体信息 || {};
-      const chars = normal.性格 || {};
+      const personalities = normal.性格 || {};
       const hobbies = normal.爱好 || {};
       const tags = normal.身份标签 || {};
       const known = normal.认识的人 || {};
@@ -707,7 +628,7 @@
           <div>身高：${escapeHtml(body.身高 ?? '')}cm 体重：${escapeHtml(body.体重 ?? '')}kg</div>
           <div>三围：${escapeHtml(body.三围 || '')} 体质：${escapeHtml(body.体质特征 || '')}</div>
         </div>
-        <div class="detail-block"><h4>性格</h4>${Object.entries(chars).map(([k,v]) => `<div class="record-row"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`).join('') || '-'}</div>
+        <div class="detail-block"><h4>性格</h4>${Object.entries(personalities).map(([k,v]) => `<div class="record-row"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`).join('') || '-'}</div>
         <div class="detail-block"><h4>爱好</h4>${Object.entries(hobbies).map(([k,v]) => `<div class="record-row"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`).join('') || '-'}</div>
         <div class="detail-block"><h4>身份标签</h4>${Object.entries(tags).map(([k,v]) => `<div class="record-row"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`).join('') || '-'}</div>
         <div class="detail-block"><h4>认识的人</h4>${Object.entries(known).map(([k,v]) => `<div class="record-row"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`).join('') || '-'}</div>
@@ -743,23 +664,21 @@
     }
   }
 
+  // 渲染地点列表
   function renderLocList() {
     const container = document.getElementById('loc-list');
-    container.innerHTML = '';
-    const locs = mvuData.地点 || {};
+    const locs = getVar('地点', {});
     const keys = Object.keys(locs);
     if (!keys.length) {
       container.innerHTML = '<div style="padding:20px;text-align:center;color:#8a7a80;">暂无地点数据</div>';
       return;
     }
+    container.innerHTML = '';
     keys.forEach(name => {
-      const loc = locs[name];
       const card = document.createElement('div');
       card.className = 'char-card stage-1';
-      const avatar = getAvatar(name);
-      const initials = escapeHtml(name.slice(0,1));
       card.innerHTML = `
-        <div class="char-avatar">${avatar ? '<img src="'+avatar+'" alt="">' : initials}</div>
+        <div class="char-avatar">${escapeHtml(name.slice(0,1))}</div>
         <div class="char-name">${escapeHtml(name)}</div>
       `;
       card.addEventListener('click', () => openLocDetail(name));
@@ -768,12 +687,12 @@
   }
 
   function openLocDetail(name) {
-    const locs = mvuData.地点 || {};
+    const locs = getVar('地点', {});
     const loc = locs[name];
     if (!loc) return;
-    const container = document.getElementById('loc-detail-content');
-    const chars = mvuData.角色 || {};
+    const chars = getVar('角色', {});
     const inChars = loc.在场角色 || [];
+    const container = document.getElementById('loc-detail-content');
     container.innerHTML = `
       <div class="draft-title">${escapeHtml(name)}</div>
       <div class="draft-status">当前状态：${escapeHtml(loc.当前状态 || '正常')}</div>
@@ -782,11 +701,9 @@
       <div class="draft-characters">
         ${inChars.map(cname => {
           const c = chars[cname];
-          const avatar = getAvatar(cname);
           const displayName = c ? (c.普通?.姓名 || cname) : cname;
-          const initials = escapeHtml(displayName.slice(0,1));
           return `<div class="mini-char" data-char="${escapeHtml(cname)}">
-            <div class="mini-avatar">${avatar ? '<img src="'+avatar+'" alt="">' : initials}</div>
+            <div class="mini-avatar">${escapeHtml(displayName.slice(0,1))}</div>
             <span>${escapeHtml(displayName)}</span>
           </div>`;
         }).join('') || '无'}
@@ -802,15 +719,16 @@
     document.getElementById('mask-loc-detail').classList.add('show');
   }
 
+  // 渲染背包
   function renderBackpack() {
     const container = document.getElementById('backpack-list');
-    container.innerHTML = '';
-    const items = (mvuData.主角信息 && mvuData.主角信息.持有物品) || {};
+    const items = getVar('主角信息.持有物品', {});
     const keys = Object.keys(items);
     if (!keys.length) {
       container.innerHTML = '<div style="padding:20px;text-align:center;color:#8a7a80;">背包是空的</div>';
       return;
     }
+    container.innerHTML = '';
     keys.forEach(key => {
       const item = items[key];
       const row = document.createElement('div');
@@ -821,7 +739,6 @@
   }
 
   function updateUI() {
-    mvuData = getMvuData();
     renderWorldbar();
     renderPlayer();
     renderCharList();
@@ -836,7 +753,7 @@
     document.getElementById('entry-locations').addEventListener('click', () => {
       document.getElementById('mask-loc-list').classList.add('show');
     });
-    document.getElementById('backpack-btn').addEventListener('click', () => {
+    document.getElementById('entry-backpack').addEventListener('click', () => {
       document.getElementById('mask-backpack').classList.add('show');
     });
     document.querySelectorAll('[data-close]').forEach(btn => {
@@ -849,28 +766,28 @@
         if (e.target === mask) mask.classList.remove('show');
       });
     });
-    // 刷新按钮
-    document.getElementById('refresh-btn').addEventListener('click', () => {
-      updateUI();
-    });
   }
 
-  function observeData() {
-    setInterval(() => {
-      const newData = getMvuData();
-      if (JSON.stringify(newData) !== JSON.stringify(mvuData)) {
-        mvuData = newData;
-        updateUI();
+  function init() {
+    bindEvents();
+    updateUI();
+    // 尝试使用 MVU 事件监听
+    try {
+      if (typeof eventOn === 'function' && window.Mvu && Mvu.events) {
+        eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, updateUI);
       }
-    }, 1500);
+    } catch(e) {
+      // 降级为轮询
+      setInterval(updateUI, 2000);
+    }
   }
 
-  loadAvatarCache();
-  bindEvents();
-  updateUI();
-  observeData();
-
-  window.mvuPanelRefresh = updateUI;
+  // 等待 DOM 完全加载
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 </body>
