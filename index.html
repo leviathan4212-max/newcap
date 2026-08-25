@@ -31,8 +31,9 @@
   #app {
     width: 100%;
     max-width: 600px;
+    min-height: 540px;  /* 新增：确保高度不会太扁 */
     margin: 0 auto;
-    background: rgba(255, 250, 250, 0.9);
+    background: rgba(255, 250, 250, 0.92);
     border-radius: 18px;
     box-shadow: var(--shadow);
     display: flex;
@@ -42,10 +43,10 @@
   }
   /* 世界状态栏 */
   #worldbar {
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: rgba(40, 30, 36, 0.85);
     color: #f5eef0;
-    font-size: 11px;
+    font-size: 11.5px;
     letter-spacing: 0.3px;
     overflow: hidden;
     white-space: nowrap;
@@ -66,22 +67,23 @@
   #main {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    gap: 10px;
+    padding: 12px;
+    gap: 14px;
+    flex: 1;
   }
   /* 主角信息 */
   .player-card {
     background: var(--card);
     border-radius: 12px;
-    padding: 10px 12px;
+    padding: 14px 16px;
     box-shadow: 0 2px 6px rgba(80, 50, 60, 0.06);
   }
   .player-row {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    padding: 3px 0;
-    font-size: 12px;
+    padding: 5px 0;
+    font-size: 12.5px;
   }
   .player-row .label { color: var(--muted); flex-shrink: 0; }
   .player-row .value { text-align: right; }
@@ -96,7 +98,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 0;
+    padding: 20px 0;   /* 增加高度 */
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -214,6 +216,7 @@
     padding: 14px;
     gap: 14px;
     overflow-y: auto;
+    flex: 1;
   }
   .detail-left {
     width: 130px;
@@ -441,7 +444,6 @@
   function getVariables() {
     try {
       const all = getAllVariables();
-      // 兼容 stat_data 包装
       if (all && all.stat_data) return all.stat_data;
       return all || {};
     } catch(e) {
@@ -457,8 +459,6 @@
       return def;
     }
   }
-
-  let currentData = {};
 
   function escapeHtml(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -771,18 +771,15 @@
   function init() {
     bindEvents();
     updateUI();
-    // 尝试使用 MVU 事件监听
     try {
       if (typeof eventOn === 'function' && window.Mvu && Mvu.events) {
         eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, updateUI);
       }
     } catch(e) {
-      // 降级为轮询
       setInterval(updateUI, 2000);
     }
   }
 
-  // 等待 DOM 完全加载
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
