@@ -600,8 +600,21 @@
     border-radius: 8px;
     background: rgba(0,0,0,0.07);
     color: var(--muted);
-    margin-bottom: 4px;
   }
+  .item-shop-tags { display: flex; gap: 5px; margin-bottom: 4px; flex-wrap: wrap; }
+  .item-shop-quality {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .quality-普通 { background: #f0f0f0; color: #666; }
+  .quality-优良 { background: #e8f5e8; color: #4a8a4a; }
+  .quality-稀有 { background: #e0eff7; color: #4a728a; }
+  .quality-史诗 { background: #f3e8ff; color: #7c3aed; }
+  .quality-传说 { background: linear-gradient(135deg,#ffe4b5,#ffd700); color: #8a5a00; }
   .item-shop-desc {
     font-size: 11px;
     color: #5a5058;
@@ -1038,9 +1051,9 @@
             <div class="quest-name">${escapeHtml(main.名称)}</div>
             <span class="quest-badge ${difficultyClass(main.难度)}">${escapeHtml(main.难度 || '?')}</span>
           </div>
-          <div class="quest-row"><span class="k">目标</span><span class="v">${escapeHtml(main.目标 || '-')}</span></div>
-          <div class="quest-row"><span class="k">阶段</span><span class="v">${escapeHtml(main.当前阶段 || '-')}</span></div>
-          <div class="quest-row"><span class="k">阶段目标</span><span class="v">${escapeHtml(main.阶段目标 || '-')}</span></div>
+          <div class="quest-row"><span class="k">要求</span><span class="v">${escapeHtml(main.要求 || '-')}</span></div>
+          ${main.失败条件 ? `<div class="quest-row"><span class="k">失败条件</span><span class="v">${escapeHtml(main.失败条件)}</span></div>` : ''}
+          ${main.地点 ? `<div class="quest-row"><span class="k">地点</span><span class="v">${escapeHtml(main.地点)}</span></div>` : ''}
           <div class="quest-row"><span class="k">进度</span><span class="v">${escapeHtml(main.进度 || '-')}</span></div>
           <div class="quest-row"><span class="k">奖励</span><span class="v">${escapeHtml(main.奖励 || '-')}</span></div>
           <div class="quest-row"><span class="k">惩罚</span><span class="v">${escapeHtml(main.惩罚 || '-')}</span></div>
@@ -1064,9 +1077,11 @@
               <div class="quest-name">${escapeHtml(key)}</div>
               <span class="quest-badge ${difficultyClass(t.难度)}">${escapeHtml(t.难度 || '?')}</span>
             </div>
-            <div class="quest-row"><span class="k">目标</span><span class="v">${escapeHtml(t.目标 || '-')}</span></div>
+            <div class="quest-row"><span class="k">要求</span><span class="v">${escapeHtml(t.要求 || '-')}</span></div>
+            ${t.失败条件 ? `<div class="quest-row"><span class="k">失败条件</span><span class="v">${escapeHtml(t.失败条件)}</span></div>` : ''}
             ${t.地点 ? `<div class="quest-row"><span class="k">地点</span><span class="v">${escapeHtml(t.地点)}</span></div>` : ''}
             <div class="quest-row"><span class="k">奖励</span><span class="v">${escapeHtml(t.奖励 ?? 0)} 点</span></div>
+            ${t.惩罚 ? `<div class="quest-row"><span class="k">惩罚</span><span class="v">${escapeHtml(t.惩罚)} 点</span></div>` : ''}
           </div>
         `;
       });
@@ -1082,7 +1097,7 @@
               <div class="quest-name">${escapeHtml(key)}</div>
               <span class="quest-badge ${difficultyClass(t.难度)}">${escapeHtml(t.难度 || '?')}</span>
             </div>
-            <div class="quest-row"><span class="k">目标</span><span class="v">${escapeHtml(t.目标 || '-')}</span></div>
+            <div class="quest-row"><span class="k">要求</span><span class="v">${escapeHtml(t.要求 || '-')}</span></div>
             ${t.地点 ? `<div class="quest-row"><span class="k">地点</span><span class="v">${escapeHtml(t.地点)}</span></div>` : ''}
             <div class="quest-row"><span class="k">奖励</span><span class="v">${escapeHtml(t.奖励 ?? 0)} 点</span></div>
           </div>
@@ -1136,19 +1151,23 @@
     keys.forEach(name => {
       const it = items[name];
       const cat = it.类别 || '';
+      const quality = it.品质 || '';
       let catClass = '';
       if (cat === '能力') catClass = 'ability';
-      else if (cat === '能力升级') catClass = 'ability-upgrade';
-      else if (cat === '系统道具') catClass = 'system-item';
-      else if (cat === '神秘道具') catClass = 'mystery-item';
-      else if (cat === '趣味道具') catClass = 'fun-item';
+      else if (cat === '升级卡') catClass = 'ability-upgrade';
+      else if (cat === '道具') catClass = 'system-item';
+      else if (cat === '情趣用品') catClass = 'fun-item';
+      else if (cat === 'BDSM用品') catClass = 'mystery-item';
       html += `
         <div class="item-shop-card ${catClass}">
           <div class="item-shop-head">
             <div class="item-shop-name">${escapeHtml(name)}</div>
             <div class="item-shop-price">${escapeHtml(it.价格 ?? 0)} 点</div>
           </div>
-          ${cat ? `<div class="item-shop-cat">${escapeHtml(cat)}</div>` : ''}
+          <div class="item-shop-tags">
+            ${cat ? `<span class="item-shop-cat">${escapeHtml(cat)}</span>` : ''}
+            ${quality && quality !== '无' ? `<span class="item-shop-quality quality-${escapeHtml(quality)}">${escapeHtml(quality)}</span>` : ''}
+          </div>
           <div class="item-shop-desc">${escapeHtml(it.介绍 || '')}</div>
         </div>
       `;
